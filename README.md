@@ -1,6 +1,15 @@
 # Kermit
+A GitHub App built with [Probot](https://github.com/probot/probot) that . This Probot application can be deployed as an Azure Web App (via docker container) to help facilitate the delegated bypass request process. In general the application listens for a `exemption_request_secret_scanning` event in a GitHub repository and then
 
-A GitHub App built with [Probot](https://github.com/probot/probot) that helps facilitate the delegated bypass request process
+- ...
+
+
+## Functional Architecture
+
+<img width="755" alt="image" src="https://github.com/user-attachments/assets/f028a72d-6f1d-4f8f-8434-cd56daeb3aee">
+
+- ...
+
 
 ## Requirements
 1. A GitHub App must be installed on the Organization that you wish to enable Issues-based collaboration for delegated bypass requests on
