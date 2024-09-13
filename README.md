@@ -40,7 +40,64 @@ A GitHub App built with [Probot](https://github.com/probot/probot) that helps fa
      - **WEBHOOK_SECRET**: The Webhook secret specified when creating the GitHub App
      - **PRIVATE_KEY**: The Base64 string associated with the GitHub Apps Private key `.pem` file
 
-## Setup
+## Deploy Infrastructure 
+Infrastructure is required to process webhook events. Several Azure services are used to provide the needed runtimes, configurations, and storage.
+
+> **Note**
+> In this case it is assumed that a Federated credential for GitHub Actions has been [correctly configured](https://github.com/marketplace/actions/azure-login#configure-a-federated-credential-to-use-oidc-based-authentication).
+
+### Terraform
+Use GitHub Actions 🚀 to execute Terraform CLI commands 
+
+1. Create a file named `/.github/workflows/deploy_to_azure.yml` in the repository created during Step 4 of the Requirements section. Optionally update the `app-name:` value that is used in the names of Azure resources
+
+```
+name: Kermit
+on:
+  workflow_dispatch:
+  push:
+    branches: ['main']
+    paths:
+      - 'terraform/**'
+jobs:     
+  Deploy:
+    uses: expert-services/reusable-workflows/.github/workflows/deploy_github_app.yml@main
+    with:
+      app-name: kermit
+      cloud-provider: az
+    secrets: inherit
+```
+
+2. Copy the contents of [terraform/](terraform/) into the repository created during Step 4 of the Requirements section
+   1. Optionally edit the default values in the `variables.tf` file copied in Step 1
+3. Upon committing the files Step 2 observe the `deploy_to_azure.yml` workflow execute
+4. Update the GitHub App **Webook URL** mentioned in Step 1 of the Requirements section to the URL of the App Service that is deployed
+
+> **Note**
+> If using the default values in [terraform/variables.tf](terraform/variables.tf), resources will be deployed in the East US region
+
+### State Management
+Code is included as part of the referenced reusable workflow at  [expert-services/reusable-workflows/.github/workflows/deploy_github_app.yml](https://github.com/expert-services/reusable-workflows/blob/main/.github/workflows/deploy_github_app.yml) to boostrap and maintain the needed Azure infrastructure for Terraform state files. The workflow creates an Azure Storage Account `<app-name>state<GITHUB_ORG>` (omitting `-` characters, limiting the name to 24 characters), as well as a storage container named `<GITHUB_ORG>-tfstate` if they are not present. This Azure Storage Account is then referenced as part of a backend configuration for Terraform state when initializing with the `terraform` CLI. If these values create a collision or are not up to the desired naming standards, change them before executing the workflow.
+
+```powershell 
+...
+...
+
+terraform init -backend-config="resource_group_name=$($storageAccount.ResourceGroupName)" `
+               -backend-config="storage_account_name=$($storageAccount.StorageAccountName)" `
+               -backend-config="container_name=$env:GITHUB_REPOSITORY_OWNER-tfstate" `
+               -backend-config="key=prod.terraform.tfstate" `
+               -backend-config="use_oidc=true" `
+               -backend-config="subscription_id=$env:TF_VAR_subscription_id" `
+               -backend-config="tenant_id=$env:TF_VAR_tenant_id" `
+               -backend-config="client_id=$env:TF_VAR_client_id" && terraform plan -out out.tfplan && terraform apply -auto-approve out.tfplan
+
+...
+...
+```
+
+
+## Local Development
 
 ```sh
 # Install dependencies
