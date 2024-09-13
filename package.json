@@ -1,0 +1,32 @@
+{
+  "name": "delegated-bypass-notifier",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A Probot app",
+  "author": "David Wiggs",
+  "license": "ISC",
+  "homepage": "https://github.com//",
+  "keywords": [
+    "probot",
+    "github",
+    "probot-app"
+  ],
+  "scripts": {
+    "start": "probot run ./index.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "octokit": "^4.0.2",
+    "probot": "^13.0.1",
+    "universal-github-app-jwt": "^2.2.0"
+  },
+  "devDependencies": {
+    "nock": "^14.0.0-beta.5",
+    "smee-client": "^2.0.0"
+  },
+  "engines": {
+    "node": ">= 18"
+  },
+  "type": "module"
+}
