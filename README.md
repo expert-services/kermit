@@ -8,7 +8,7 @@ A GitHub App built with [Probot](https://github.com/probot/probot) that spills t
 
 ## Functional Architecture
 
-<img width="918" alt="image" src="https://github.com/user-attachments/assets/182cad6d-322d-4d41-8b73-42126c0fe4dd">
+<img width="803" alt="image" src="https://github.com/user-attachments/assets/7bb7b049-88c1-4a12-9573-2fc18e102d8a">
 
 
 
