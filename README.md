@@ -1,15 +1,38 @@
 # Kermit
-A GitHub App built with [Probot](https://github.com/probot/probot) that . This Probot application can be deployed as an Azure Web App (via docker container) to help facilitate the delegated bypass request process. In general the application listens for a `exemption_request_secret_scanning` event in a GitHub repository and then
+A GitHub App built with [Probot](https://github.com/probot/probot) that spills the tea. This Probot application can be deployed as an Azure Web App (via docker container) to help facilitate the delegated bypass request process. In general the application listens for a `exemption_request_secret_scanning` event in a GitHub repository and then
 
-- ...
+- Identifies which Organization role(s) contain the `org_review_and_manage_secret_scanning_bypass_requests` permission
+- Identifies which Team(s) have the required roles assigned
+- Creates and udpates a GitHub Issue to provide more details about a given Secret Scanning alert push protection bypass request
 
 
 ## Functional Architecture
 
-<img width="755" alt="image" src="https://github.com/user-attachments/assets/f028a72d-6f1d-4f8f-8434-cd56daeb3aee">
+<img width="918" alt="image" src="https://github.com/user-attachments/assets/182cad6d-322d-4d41-8b73-42126c0fe4dd">
 
-- ...
 
+
+### Components
+#### 1. Event Listener:
+
+- The app listens to various GitHub events using the app.onAny method.
+- It specifically handles events related to secret scanning exemption requests.
+
+#### 2. Event Handlers:
+
+- **Created Event:** When an exemption request is created, the app fetches roles with specific permissions, retrieves teams associated with those roles, and creates a GitHub issue with detailed information about the request.
+- **Completed Event:** When an exemption request is completed, the app updates the issue's labels and state, and adds a comment indicating whether the request was approved or denied.
+- **Response Dismissed Event:** When a response to an exemption request is dismissed, the app updates the issue's labels and state, and adds a comment.
+- **Response Submitted Event:** When a response to an exemption request is submitted, the app updates the issue's labels and state, and adds a comment.
+
+#### 3. Helper Functions:
+
+- **fetchRolesWithPermission:** Fetches organization roles that have the permission to review and manage secret scanning bypass requests.
+- **fetchTeamsForRoles:** Fetches teams associated with the roles that have the required permissions.
+- **updateIssueLabels:** Updates the labels of an issue based on the new status of the exemption request.
+- **findIssueByTitle:** Finds an issue in the repository by its title.
+- **processExemptionRequest:** Processes a newly created exemption request by creating a GitHub issue with detailed information.
+- **handleExemptionRequestUpdate:** Handles updates to exemption requests by updating issue labels, state, and adding comments.
 
 ## Requirements
 1. A GitHub App must be installed on the Organization that you wish to enable Issues-based collaboration for delegated bypass requests on
