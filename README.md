@@ -5,17 +5,15 @@ A GitHub App built with [Probot](https://github.com/probot/probot) that spills t
 - Identifies which Team(s) have the required roles assigned
 - Creates and udpates a GitHub Issue to provide more details about a given Secret Scanning alert push protection bypass request
 
+<img width="1268" alt="image" src="https://github.com/user-attachments/assets/81b769e9-6c33-49c3-982b-9c9977338924">
+
 
 ## Functional Architecture
-
-<img width="803" alt="image" src="https://github.com/user-attachments/assets/7bb7b049-88c1-4a12-9573-2fc18e102d8a">
-
-
 
 ### Components
 #### 1. Event Listener:
 
-- The app listens to various GitHub events using the app.onAny method.
+- The app listens to GitHub events using the app.onAny method.
 - It specifically handles events related to secret scanning exemption requests.
 
 #### 2. Event Handlers:
@@ -33,6 +31,9 @@ A GitHub App built with [Probot](https://github.com/probot/probot) that spills t
 - **findIssueByTitle:** Finds an issue in the repository by its title.
 - **processExemptionRequest:** Processes a newly created exemption request by creating a GitHub issue with detailed information.
 - **handleExemptionRequestUpdate:** Handles updates to exemption requests by updating issue labels, state, and adding comments.
+
+<img width="803" alt="image" src="https://github.com/user-attachments/assets/7bb7b049-88c1-4a12-9573-2fc18e102d8a">
+
 
 ## Requirements
 1. A GitHub App must be installed on the Organization that you wish to enable Issues-based collaboration for delegated bypass requests on
